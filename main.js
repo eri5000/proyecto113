@@ -1,30 +1,41 @@
-function preload(){
+Nose_X=0;
+Nose_Y=0;
 
+function preload(){
+ gorro=loadImage('https://i.postimg.cc/cJWnsRCr/gorro.png');
 }
 
 function setup(){
-canvas = createCanvas(400,400);
-canvas.position(650,70);
-video = createCapture(VIDEO);
-video.hide();
+    canvas = createCanvas(300,300);
+    canvas.center();
+    video = createCapture(VIDEO);
+    video.size(300,300);
+    video.hide();
+    poseNet=ml5.poseNet(video,modelLoaded);
+    poseNet.on('pose',gotPoses);
 
+    
+}
+function gotPoses(results){
+    if(results.length > 0 ){
+     console.log(results);
+     Nose_X=results[0].pose.nose.x-20;
+     Nose_Y=results[0].pose.nose.y-20;
+     console.log("Nose X= " + Nose_X);
+     console.log("Nose Y= " + Nose_Y);
+    }
 }
 
 function draw(){
-image(video,50,50,300,300);
-let c = color('lightblue');
-fill(c);
-noStroke();
-circle(30,25,50);
-rect(50,20,650,20);
-circle(375,25,50);
-circle(30,370,50);
-rect(50,360,650,20);
-circle(375,370,50);
-
+image(video , 0 , 0 , 300 , 300);
+image(gorro);
 }
 
 function take_snapshot(){
-    save('image1.png');
+    save('FilterImage.png');
+}
+
+function modelLoaded(){
+    console.log("poseNet esta inicialisado");
 }
 
